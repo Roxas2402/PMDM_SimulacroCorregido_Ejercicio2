@@ -3,6 +3,7 @@ package com.example.pmdm_simulacrocorregido_ejercicio2;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.pmdm_simulacrocorregido_ejercicio2.adapters.ProductosModelAdapters;
 import com.example.pmdm_simulacrocorregido_ejercicio2.modelos.ProductoModel;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -11,6 +12,8 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.View;
 import android.widget.Toast;
@@ -31,6 +34,10 @@ public class MainActivity extends AppCompatActivity {
     //TODO: 9.01: Al ImageButton se le cambia el gravity y otras 20 cosas para que quede bonito
     //TODO: 10: Creamos el paquete adapters y la clase java
 
+    //TODO: 11: Variables para el adapter. Se inicializa DESPUÉS de la lista
+    private ProductosModelAdapters adapter;
+    private RecyclerView.LayoutManager layoutManager;
+
     //TODO: 5: Creamos la lista de lo que tiene el bundle de AddProductoActivity
     private ArrayList<ProductoModel> productoModelsList;
     private ActivityResultLauncher<Intent> launcherAddProducto;
@@ -46,6 +53,14 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(binding.toolbar);
         //TODO: 5.01: Inicializamos el ArrayList
         productoModelsList = new ArrayList<>();
+
+        //TODO: 11.01: Inicializamos el adapter
+        adapter = new ProductosModelAdapters(productoModelsList, R.layout.product_view_holder, this);
+        //El número es para el número de columnas
+        layoutManager = new GridLayoutManager(this, 1);
+        binding.contentMain.contenedor.setLayoutManager(layoutManager);
+        binding.contentMain.contenedor.setAdapter(adapter);
+
         //TODO: 6: Creamos la función para inicializar los launchers
         inicializaLaunchers();
 
@@ -67,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                     if (result.getData() != null && result.getData().getExtras() != null) {
                         ProductoModel p = (ProductoModel) result.getData().getExtras().getSerializable("PROD");
                         productoModelsList.add(p);
-                        Toast.makeText(MainActivity.this, p.toString(), Toast.LENGTH_SHORT).show();
+                        adapter.notifyItemInserted(productoModelsList.size() - 1);
                     }
                 }
             }
