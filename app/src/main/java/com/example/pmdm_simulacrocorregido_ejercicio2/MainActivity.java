@@ -1,6 +1,7 @@
 package com.example.pmdm_simulacrocorregido_ejercicio2;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import com.example.pmdm_simulacrocorregido_ejercicio2.adapters.ProductosModelAdapters;
@@ -69,8 +70,14 @@ public class MainActivity extends AppCompatActivity {
 
         //TODO: 11.01: Inicializamos el adapter
         adapter = new ProductosModelAdapters(productoModelsList, R.layout.product_view_holder, this);
-        //El número es para el número de columnas
-        layoutManager = new GridLayoutManager(this, 1);
+
+        //TODO 19: El número es para el número de columnas en vertical y horizontal (Landscape)
+//        int columnas = 1;
+//        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+//            columnas = 2;
+//        }
+        int columnas = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 2 : 1;
+        layoutManager = new GridLayoutManager(this, columnas);
         binding.contentMain.contenedor.setLayoutManager(layoutManager);
         binding.contentMain.contenedor.setAdapter(adapter);
 
