@@ -11,6 +11,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.example.pmdm_simulacrocorregido_ejercicio2.databinding.ActivityMainBinding;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 
@@ -33,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
     //TODO: 9: Añadimos el nuevo LayoutResourceFile, tipo CardView, nombre product_view_holder y metemos las Views
     //TODO: 9.01: Al ImageButton se le cambia el gravity y otras 20 cosas para que quede bonito
     //TODO: 10: Creamos el paquete adapters y la clase java
+    //TODO: 12: Hacemos las Views del ContentMain
+
+
 
     //TODO: 11: Variables para el adapter. Se inicializa DESPUÉS de la lista
     private ProductosModelAdapters adapter;
@@ -41,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
     //TODO: 5: Creamos la lista de lo que tiene el bundle de AddProductoActivity
     private ArrayList<ProductoModel> productoModelsList;
     private ActivityResultLauncher<Intent> launcherAddProducto;
+
+    //TODO: NUMBERFORMAT
+    NumberFormat nf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +61,11 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(binding.toolbar);
         //TODO: 5.01: Inicializamos el ArrayList
         productoModelsList = new ArrayList<>();
+
+        //TODO: INSTANCIAR NUMBERFORMAT
+        nf = NumberFormat.getCurrencyInstance();
+
+        calculaValores();
 
         //TODO: 11.01: Inicializamos el adapter
         adapter = new ProductosModelAdapters(productoModelsList, R.layout.product_view_holder, this);
@@ -83,11 +96,41 @@ public class MainActivity extends AppCompatActivity {
                         ProductoModel p = (ProductoModel) result.getData().getExtras().getSerializable("PROD");
                         productoModelsList.add(p);
                         adapter.notifyItemInserted(productoModelsList.size() - 1);
+                        //TODO: 14: Llamar a la función
+                        calculaValores();
                     }
                 }
             }
         });
     }
 
+    //TODO: 13:
+    //HAY QUE CREAR EL NUMBERFORMAT, ESTÁ ARRIBA. TAMBIÉN HAY QUE INSTANCIARLO
+    public void calculaValores() {
+        int cantidad = 0;
+        float precio = 0;
+        for (ProductoModel p : productoModelsList) {
+            cantidad += p.getCantidad();
+            precio += p.getCantidad() * p.getPrecio();
+        }
+        binding.contentMain.lblCantidadTotalMain.setText(String.valueOf(cantidad));
+        binding.contentMain.lblPrecioTotalMain.setText(nf.format(precio));
+    }
 
+    //TODO 18: Hacer que gire
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("LISTA", productoModelsList);
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        ArrayList<ProductoModel> kk = (ArrayList<ProductoModel>) savedInstanceState.get("LISTA");
+        productoModelsList.addAll(kk);
+        adapter.notifyItemRangeInserted(0, productoModelsList.size());
+        calculaValores();
+    }
 }

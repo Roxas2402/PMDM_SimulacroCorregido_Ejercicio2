@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pmdm_simulacrocorregido_ejercicio2.MainActivity;
 import com.example.pmdm_simulacrocorregido_ejercicio2.R;
 import com.example.pmdm_simulacrocorregido_ejercicio2.modelos.ProductoModel;
 
@@ -22,6 +23,8 @@ import java.util.List;
 
 
 public class ProductosModelAdapters extends RecyclerView.Adapter<ProductosModelAdapters.ProductoVH> {
+
+    //TODO: 15: LAS FUNCIONES CONFIRMDELETE Y EDIT PRODUCTO HAN DE LLAMAR A CALCULAVALORES. MIRAR TODO 16
 
     //10.05:
     private List<ProductoModel> objects;
@@ -32,12 +35,17 @@ public class ProductosModelAdapters extends RecyclerView.Adapter<ProductosModelA
     //10.10.02: Hay que crear el constructor, pero se crea donde ya están todos
     private NumberFormat nf;
 
+    //16.01
+    private MainActivity main;
+
     //10.06: Constructor de las variables de arriba
     public ProductosModelAdapters(List<ProductoModel> objects, int resource, Context context) {
         this.objects = objects;
         this.resource = resource;
         this.context = context;
         nf = NumberFormat.getCurrencyInstance();
+        //TODO: 16: Creamos para llamar a la función calculaValores del main (mirar 16.01 / 02 / 03)
+        main = (MainActivity) context;
     }
 
     //10.07: En el error hay que implementar los métodos
@@ -104,9 +112,13 @@ public class ProductosModelAdapters extends RecyclerView.Adapter<ProductosModelA
                 if (!txtCantidad.getText().toString().isEmpty() && !txtPrecio.getText().toString().isEmpty()) {
                     p.setCantidad(Integer.parseInt(txtCantidad.getText().toString()));
                     p.setPrecio(Float.parseFloat(txtPrecio.getText().toString()));
+                    notifyItemChanged(position);
+                    //16.02
+                    main.calculaValores();
                 }
             }
         });
+
 
         return builder.create();
     }
@@ -122,6 +134,8 @@ public class ProductosModelAdapters extends RecyclerView.Adapter<ProductosModelA
             public void onClick(DialogInterface dialogInterface, int i) {
                 objects.remove(p);
                 notifyItemRemoved(position);
+                //16.03
+                main.calculaValores();
             }
         });
         return builder.create();
@@ -138,6 +152,7 @@ public class ProductosModelAdapters extends RecyclerView.Adapter<ProductosModelA
         //10.03:
         TextView lblNombre, lblCantidad, lblPrecio;
         ImageButton btnEliminar;
+
         //10.02:
         public ProductoVH(@NonNull View itemView) {
             super(itemView);
@@ -148,4 +163,6 @@ public class ProductosModelAdapters extends RecyclerView.Adapter<ProductosModelA
             btnEliminar = itemView.findViewById(R.id.btnEliminarProductoCard);
         }
     }
+
+
 }
