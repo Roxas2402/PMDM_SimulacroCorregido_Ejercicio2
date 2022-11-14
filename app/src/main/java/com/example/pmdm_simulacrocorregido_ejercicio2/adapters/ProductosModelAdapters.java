@@ -35,7 +35,7 @@ public class ProductosModelAdapters extends RecyclerView.Adapter<ProductosModelA
     //10.10.02: Hay que crear el constructor, pero se crea donde ya están todos
     private NumberFormat nf;
 
-    //16.01
+    //TODO: 16.01
     private MainActivity main;
 
     //10.06: Constructor de las variables de arriba

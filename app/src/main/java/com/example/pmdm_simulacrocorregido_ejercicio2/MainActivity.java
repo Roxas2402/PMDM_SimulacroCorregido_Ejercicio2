@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     //TODO: 1: Crear el modelo (ProductoModel) con todos los atributos
     //TODO: 2: Creamos AddProductoActivity y metemos las Views
     //TODO: 8: Cambiamos el id del constraint (creo que se llama así) del activitymain y añadimos el contenedor al contentmain
+    //TODO: En el caso de que haya que hacer un ScrollView, se hace en el content_main
     //TODO: 9: Añadimos el nuevo LayoutResourceFile, tipo CardView, nombre product_view_holder y metemos las Views
     //TODO: 9.01: Al ImageButton se le cambia el gravity y otras 20 cosas para que quede bonito
     //TODO: 10: Creamos el paquete adapters y la clase java
@@ -102,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
                     if (result.getData() != null && result.getData().getExtras() != null) {
                         ProductoModel p = (ProductoModel) result.getData().getExtras().getSerializable("PROD");
                         productoModelsList.add(p);
+                        //TODO: 11.02:
                         adapter.notifyItemInserted(productoModelsList.size() - 1);
                         //TODO: 14: Llamar a la función
                         calculaValores();
